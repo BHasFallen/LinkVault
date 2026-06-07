@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>LinkVault - Extension Popup</title>
+
+	<!-- Google Fonts: Plus Jakarta Sans -->
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+	
+	<!-- Font Awesome for Icons -->
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+	<style>
+		:root {
+			--bg-primary: #090d16;
+			--bg-secondary: #131a2c;
+			--bg-input: #1a233b;
+			--border-color: #24304a;
+			--border-focus: #38bdf8;
+			--text-primary: #f1f5f9;
+			--text-secondary: #94a3b8;
+			--accent: #38bdf8;
+			--accent-hover: #0ea5e9;
+			--danger: #ef4444;
+			--danger-hover: #dc2626;
+		}
+
+		* {
+			box-sizing: border-box;
+			margin: 0;
+			padding: 0;
+		}
+
+		body {
+			width: 420px;
+			background-color: var(--bg-primary);
+			color: var(--text-primary);
+			font-family: 'Plus Jakarta Sans', sans-serif;
+			padding: 20px;
+			overflow-x: hidden;
+		}
+
+		/* Header Section */
+		header {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			margin-bottom: 24px;
+			padding-bottom: 14px;
+			border-bottom: 1px solid var(--border-color);
+		}
+
+		.logo-title {
+			display: flex;
+			align-items: center;
+			gap: 10px;
+		}
+
+		.logo-title i {
+			font-size: 18px;
+			color: var(--accent);
+		}
+
+		header h1 {
+			font-size: 16px;
+			font-weight: 600;
+			letter-spacing: -0.2px;
+		}
+
+		.header-actions {
+			display: flex;
+			gap: 8px;
+		}
+
+		.header-btn {
+			background-color: var(--bg-secondary);
+			border: 1px solid var(--border-color);
+			color: var(--text-secondary);
+			cursor: pointer;
+			width: 32px;
+			height: 32px;
+			border-radius: 6px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			transition: all 0.2s ease;
+			font-size: 13px;
+		}
+
+		.header-btn:hover {
+			color: var(--accent);
+			border-color: var(--border-focus);
+			background-color: var(--bg-input);
+		}
+
+		/* Links Area */
+		.links-area {
+			display: flex;
+			flex-direction: column;
+			gap: 12px;
+			margin-bottom: 24px;
+		}
+
+		.profile-row {
+			display: flex;
+			align-items: center;
+			background-color: var(--bg-secondary);
+			border: 1px solid var(--border-color);
+			border-radius: 10px;
+			padding: 8px 12px;
+			transition: border-color 0.2s ease, box-shadow 0.2s ease;
+		}
+
+		.profile-row:focus-within {
+			border-color: var(--border-focus);
+			box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.15);
+		}
+
+		.profile-icon {
+			font-size: 18px;
+			color: var(--text-secondary);
+			width: 28px;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+		}
+
+		.profile-input {
+			flex: 1;
+			background: transparent;
+			border: none;
+			outline: none;
+			color: var(--text-primary);
+			font-family: inherit;
+			font-size: 14px;
+			padding: 6px 8px;
+			margin-right: 8px;
+		}
+
+		.profile-input::placeholder {
+			color: var(--text-secondary);
+			opacity: 0.5;
+		}
+
+		.action-btn {
+			background: transparent;
+			border: none;
+			outline: none;
+			color: var(--text-secondary);
+			cursor: pointer;
+			padding: 6px;
+			border-radius: 6px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			transition: color 0.15s ease, background-color 0.15s ease;
+			font-size: 14px;
+		}
+
+		.action-btn:hover {
+			color: var(--text-primary);
+			background-color: var(--bg-input);
+		}
+
+		.action-btn.delete-btn:hover {
+			color: var(--danger);
+			background-color: rgba(239, 68, 68, 0.1);
+		}
+
+		/* Bottom Controls */
+		.controls {
+			display: flex;
+			justify-content: center;
+		}
+
+		#add_new_button {
+			background-color: var(--bg-secondary);
+			border: 1px solid var(--border-color);
+			color: var(--text-primary);
+			font-family: inherit;
+			font-size: 13.5px;
+			font-weight: 500;
+			padding: 10px 18px;
+			border-radius: 8px;
+			cursor: pointer;
+			display: flex;
+			align-items: center;
+			gap: 8px;
+			transition: background-color 0.2s ease, border-color 0.2s ease;
+		}
+
+		#add_new_button:hover {
+			background-color: var(--bg-input);
+			border-color: var(--border-focus);
+		}
+
+		#add_new_button i {
+			font-size: 12px;
+			color: var(--accent);
+		}
+
+		/* Toast Notification */
+		.toast {
+			position: fixed;
+			bottom: 16px;
+			left: 50%;
+			transform: translate(-50%, 10px);
+			background-color: var(--bg-secondary);
+			border: 1px solid var(--border-color);
+			color: var(--text-primary);
+			padding: 8px 16px;
+			border-radius: 8px;
+			font-size: 12px;
+			font-weight: 500;
+			pointer-events: none;
+			opacity: 0;
+			transition: opacity 0.2s ease, transform 0.2s ease;
+			box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+			display: flex;
+			align-items: center;
+			gap: 8px;
+			z-index: 1000;
+		}
+
+		.toast.show {
+			opacity: 1;
+			transform: translate(-50%, 0);
+		}
+
+		.toast i {
+			color: var(--accent);
+		}
+	</style>
+</head>
+<body>
+	<header>
+		<div class="logo-title">
+			<i class="fa-solid fa-paperclip"></i>
+			<h1>LinkVault</h1>
+		</div>
+		<div class="header-actions">
+			<button id="autofill_btn" class="header-btn" title="Autofill Job Application">
+				<i class="fa-solid fa-bolt"></i>
+			</button>
+			<button id="quick_share_btn" class="header-btn" title="Generate Quick-Share Link">
+				<i class="fa-solid fa-share-nodes"></i>
+			</button>
+		</div>
+	</header>
+
+	<main>
+		<!-- Profile Fields rendered dynamically -->
+		<div class="links-area"></div>
+
+		<!-- Add Custom Profile Inline Form -->
+		<div id="add-profile-form" class="profile-row" style="display: none; margin-bottom: 24px; border-color: var(--accent);">
+			<i id="new-profile-icon" class="profile-icon fa-solid fa-link" style="color: var(--accent);"></i>
+			<input id="new-profile-url" class="profile-input" type="text" placeholder="Paste profile URL...">
+			<button id="confirm-add-btn" class="action-btn" title="Add profile">
+				<i class="fa-solid fa-check"></i>
+			</button>
+			<button id="cancel-add-btn" class="action-btn delete-btn" title="Cancel">
+				<i class="fa-solid fa-xmark"></i>
+			</button>
+		</div>
+
+		<!-- Deployment Settings Panel -->
+		<div id="settings-panel" style="margin-top: 16px; border-top: 1px solid var(--border-color); padding-top: 16px; display: none;">
+			<h3 style="font-size: 12px; font-weight: 600; margin-bottom: 12px; color: var(--text-secondary);">Quick-Share Deployment Configuration</h3>
+			<div style="display: flex; flex-direction: column; gap: 10px;">
+				<div style="display: flex; flex-direction: column; gap: 4px;">
+					<label style="font-size: 11px; color: var(--text-secondary); font-weight: 500;">GitHub Username</label>
+					<input id="setting-username" class="profile-input" type="text" placeholder="e.g. johndoe" style="background-color: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 6px; padding: 6px 10px; width: 100%;">
+				</div>
+				<div style="display: flex; flex-direction: column; gap: 4px;">
+					<label style="font-size: 11px; color: var(--text-secondary); font-weight: 500;">Repository Name</label>
+					<input id="setting-repo" class="profile-input" type="text" placeholder="LinkVault" style="background-color: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 6px; padding: 6px 10px; width: 100%;">
+				</div>
+			</div>
+		</div>
+
+		<div class="controls" style="display: flex; align-items: center; justify-content: center; gap: 10px;">
+			<button id="add_new_button">
+				<i class="fa-solid fa-plus"></i> Add custom profile
+			</button>
+			<button id="toggle_settings_btn" class="action-btn" title="Deployment Settings" style="width: 38px; height: 38px; background-color: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 8px;">
+				<i class="fa-solid fa-gear"></i>
+			</button>
+		</div>
+	</main>
+
+	<!-- Toast Container -->
+	<div id="toast" class="toast">
+		<i class="fa-solid fa-circle-check"></i>
+		<span id="toast-message">Copied to clipboard</span>
+	</div>
+
+	<script src="./script.js"></script>
+</body>
+</html>

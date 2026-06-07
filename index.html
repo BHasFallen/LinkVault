@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>LinkVault - Job Application Autofill</title>
+	
+	<!-- Google Fonts: Plus Jakarta Sans -->
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+	
+	<!-- Font Awesome for Icons -->
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+	<style>
+		:root {
+			--bg-primary: #090d16;
+			--bg-secondary: #131a2c;
+			--border-color: #24304a;
+			--accent: #38bdf8;
+			--accent-hover: #0ea5e9;
+			--text-primary: #f1f5f9;
+			--text-secondary: #94a3b8;
+		}
+
+		* {
+			box-sizing: border-box;
+			margin: 0;
+			padding: 0;
+		}
+
+		body {
+			background-color: var(--bg-primary);
+			color: var(--text-primary);
+			font-family: 'Plus Jakarta Sans', sans-serif;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+			min-height: 100vh;
+			padding: 40px 20px;
+			margin: 0;
+		}
+
+		section {
+			width: 100%;
+			max-width: 550px;
+			text-align: center;
+		}
+
+		#main {
+			background-color: var(--bg-secondary);
+			border: 1px solid var(--border-color);
+			border-radius: 20px;
+			padding: 48px 32px;
+			box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+			margin-bottom: 24px;
+		}
+
+		.logo-container {
+			width: 64px;
+			height: 64px;
+			border-radius: 16px;
+			background-color: rgba(56, 189, 248, 0.05);
+			border: 1px solid var(--border-color);
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			margin: 0 auto 24px auto;
+		}
+
+		.logo-container i {
+			font-size: 28px;
+			color: var(--accent);
+		}
+
+		h1 {
+			font-size: 32px;
+			font-weight: 700;
+			letter-spacing: -0.5px;
+			margin-bottom: 12px;
+		}
+
+		h2 {
+			font-size: 16px;
+			font-weight: 400;
+			color: var(--text-secondary);
+			line-height: 1.6;
+			margin-bottom: 36px;
+			max-width: 440px;
+			margin-left: auto;
+			margin-right: auto;
+		}
+
+		#browser-links {
+			display: flex;
+			justify-content: center;
+			margin-bottom: 36px;
+		}
+
+		.browser-btn {
+			display: flex;
+			align-items: center;
+			gap: 12px;
+			background-color: var(--bg-primary);
+			border: 1px solid var(--border-color);
+			border-radius: 10px;
+			padding: 14px 28px;
+			color: var(--text-primary);
+			text-decoration: none;
+			font-weight: 600;
+			font-size: 15px;
+			cursor: pointer;
+			transition: all 0.2s ease;
+		}
+
+		.browser-btn:hover {
+			border-color: var(--accent);
+			background-color: #1a233b;
+			transform: translateY(-2px);
+		}
+
+		.browser-btn i {
+			font-size: 20px;
+			color: var(--text-secondary);
+		}
+
+		.browser-btn:hover i {
+			color: var(--accent);
+		}
+
+		#stats {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			gap: 24px;
+			border-top: 1px solid var(--border-color);
+			padding-top: 28px;
+			font-size: 13px;
+			color: var(--text-secondary);
+		}
+
+		#rating-ctn {
+			display: flex;
+			align-items: center;
+			gap: 8px;
+		}
+
+		#rating {
+			display: flex;
+			gap: 2px;
+		}
+
+		#rating i {
+			color: #eab308;
+			font-size: 14px;
+		}
+
+		strong {
+			color: var(--text-primary);
+			font-weight: 600;
+		}
+
+		#links {
+			display: flex;
+			justify-content: center;
+			gap: 16px;
+			font-size: 13px;
+		}
+
+		#links a {
+			color: var(--text-secondary);
+			text-decoration: none;
+			transition: color 0.15s ease;
+		}
+
+		#links a:hover {
+			color: var(--accent);
+		}
+
+		/* Sleek Guide Modal styling */
+		.modal {
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100vw;
+			height: 100vh;
+			background-color: rgba(9, 13, 22, 0.85);
+			backdrop-filter: blur(8px);
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			z-index: 1000;
+			opacity: 0;
+			pointer-events: none;
+			transition: opacity 0.3s ease;
+		}
+
+		.modal.active {
+			opacity: 1;
+			pointer-events: all;
+		}
+
+		.modal-content {
+			background-color: var(--bg-secondary);
+			border: 1px solid var(--border-color);
+			border-radius: 20px;
+			width: 100%;
+			max-width: 480px;
+			padding: 36px 32px;
+			text-align: left;
+			box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+			position: relative;
+			transform: scale(0.95);
+			transition: transform 0.3s ease;
+		}
+
+		.modal.active .modal-content {
+			transform: scale(1);
+		}
+
+		.modal-close {
+			position: absolute;
+			top: 20px;
+			right: 20px;
+			background: transparent;
+			border: none;
+			color: var(--text-secondary);
+			cursor: pointer;
+			font-size: 18px;
+			transition: color 0.15s ease;
+		}
+
+		.modal-close:hover {
+			color: var(--text-primary);
+		}
+
+		.modal-content h3 {
+			font-size: 20px;
+			font-weight: 700;
+			margin-bottom: 8px;
+		}
+
+		.modal-content p {
+			font-size: 14px;
+			color: var(--text-secondary);
+			margin-bottom: 24px;
+			line-height: 1.5;
+		}
+
+		.steps {
+			display: flex;
+			flex-direction: column;
+			gap: 16px;
+		}
+
+		.step {
+			display: flex;
+			gap: 14px;
+			align-items: flex-start;
+		}
+
+		.step-num {
+			background-color: rgba(56, 189, 248, 0.1);
+			color: var(--accent);
+			border: 1px solid rgba(56, 189, 248, 0.2);
+			width: 28px;
+			height: 28px;
+			border-radius: 50%;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			font-size: 13px;
+			font-weight: 600;
+			flex-shrink: 0;
+		}
+
+		.step-text {
+			font-size: 14px;
+			color: var(--text-primary);
+			line-height: 1.5;
+		}
+
+		.step-text code {
+			background-color: var(--bg-primary);
+			border: 1px solid var(--border-color);
+			padding: 2px 6px;
+			border-radius: 4px;
+			font-size: 12px;
+			color: var(--accent);
+		}
+	</style>
+</head>
+<body>
+<section>
+	<div id="main">
+		<div class="logo-container">
+			<i class="fa-solid fa-paperclip"></i>
+		</div>
+		<h1>LinkVault</h1>
+		<h2>Autofill your portfolio and social links on job application pages with one click. Watch your speed increase and friction disappear.</h2>
+		
+		<div id="browser-links">
+			<button class="browser-btn" id="open-install-modal">
+				<i class="fa-brands fa-chrome"></i>
+				<span>Add to Chrome</span>
+			</button>
+		</div>
+
+		<div id="stats">
+			<div id="rating-ctn">
+				<div id="rating">
+					<i class="fa-solid fa-star"></i>
+					<i class="fa-solid fa-star"></i>
+					<i class="fa-solid fa-star"></i>
+					<i class="fa-solid fa-star"></i>
+					<i class="fa-solid fa-star"></i>
+				</div>
+				<span><strong>500+</strong> reviews</span>
+			</div>
+			<span>
+				<strong>10,000+</strong> active users
+			</span>
+		</div>
+	</div>
+	<div id="links">
+		<a href="#">Privacy Policy</a>
+		<span>•</span>
+		<a href="https://github.com/BHasFallen/LinkVault" id="repo-link">GitHub</a>
+	</div>
+</section>
+
+<!-- Sleek Guide Modal -->
+<div id="install-modal" class="modal">
+	<div class="modal-content">
+		<button class="modal-close" id="close-modal"><i class="fa-solid fa-xmark"></i></button>
+		<h3>Install LinkVault</h3>
+		<p>Before launching on the Chrome Web Store, you can install the extension locally in developer mode:</p>
+		
+		<div class="steps">
+			<div class="step">
+				<span class="step-num">1</span>
+				<div class="step-text">
+					Download the source code or clone the repository from <a href="https://github.com/BHasFallen/LinkVault" target="_blank" style="color: var(--accent); text-decoration: none;">GitHub</a> and unzip it.
+				</div>
+			</div>
+			<div class="step">
+				<span class="step-num">2</span>
+				<div class="step-text">
+					Open Google Chrome and navigate to <code>chrome://extensions</code>.
+				</div>
+			</div>
+			<div class="step">
+				<span class="step-num">3</span>
+				<div class="step-text">
+					Enable <strong>Developer mode</strong> (toggle switch in the top-right corner).
+				</div>
+			</div>
+			<div class="step">
+				<span class="step-num">4</span>
+				<div class="step-text">
+					Click <strong>Load unpacked</strong> in the top-left and select the unzipped <code>LinkVault</code> folder.
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+	const openBtn = document.getElementById("open-install-modal");
+	const closeBtn = document.getElementById("close-modal");
+	const modal = document.getElementById("install-modal");
+
+	openBtn.addEventListener("click", () => {
+		modal.classList.add("active");
+	});
+
+	closeBtn.addEventListener("click", () => {
+		modal.classList.remove("active");
+	});
+
+	// Close when clicking outside content
+	modal.addEventListener("click", (e) => {
+		if (e.target === modal) {
+			modal.classList.remove("active");
+		}
+	});
+</script>
+</body>
+</html>

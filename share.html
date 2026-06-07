@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Profiles</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <style>
+    :root {
+      --bg-primary: #090d16;
+      --bg-secondary: #131a2c;
+      --border-color: #24304a;
+      --accent: #38bdf8;
+      --text-primary: #f1f5f9;
+      --text-secondary: #94a3b8;
+    }
+    body {
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 24px;
+      margin: 0;
+    }
+    .container {
+      width: 100%;
+      max-width: 440px;
+      text-align: center;
+    }
+    .profile-img {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: var(--bg-secondary);
+      border: 2px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px auto;
+    }
+    .profile-img i {
+      font-size: 32px;
+      color: var(--accent);
+    }
+    h1 {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    p.subtitle {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-bottom: 32px;
+    }
+    .links {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      width: 100%;
+    }
+    .link-btn {
+      display: flex;
+      align-items: center;
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 16px 20px;
+      color: var(--text-primary);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 15px;
+      transition: all 0.2s ease;
+    }
+    .link-btn:hover {
+      background-color: #1a233b;
+      border-color: var(--accent);
+      transform: translateY(-2px);
+    }
+    .link-btn i.brand-icon {
+      font-size: 20px;
+      width: 30px;
+      margin-right: 12px;
+      display: flex;
+      justify-content: center;
+      color: var(--text-secondary);
+    }
+    .link-btn:hover i.brand-icon {
+      color: var(--accent);
+    }
+    .link-btn span {
+      flex: 1;
+      text-align: left;
+    }
+    .link-btn i.arrow-icon {
+      font-size: 12px;
+      color: #475569;
+    }
+    .footer {
+      margin-top: 48px;
+      font-size: 12px;
+      color: #475569;
+    }
+    .error-msg {
+      color: #ef4444;
+      font-size: 14px;
+      background-color: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.2);
+      border-radius: 8px;
+      padding: 12px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="profile-img">
+      <i class="fa-solid fa-paperclip"></i>
+    </div>
+    <h1 id="title">My Profiles</h1>
+    <p class="subtitle" id="subtitle">Shared via LinkVault</p>
+    <div id="links-container" class="links"></div>
+    <div class="footer">
+      Powered by LinkVault
+    </div>
+  </div>
+
+  <script>
+    const BRAND_MAPPING = [
+      { domain: "github.com", name: "Github", icon: "fa-brands fa-github" },
+      { domain: "linkedin.com", name: "Linkedin", icon: "fa-brands fa-linkedin-in" },
+      { domain: "twitter.com", name: "Twitter", icon: "fa-brands fa-x-twitter" },
+      { domain: "x.com", name: "Twitter", icon: "fa-brands fa-x-twitter" },
+      { domain: "instagram.com", name: "Instagram", icon: "fa-brands fa-instagram" },
+      { domain: "dev.to", name: "Dev", icon: "fa-brands fa-dev" },
+      { domain: "figma.com", name: "Figma", icon: "fa-brands fa-figma" },
+      { domain: "dribbble.com", name: "Dribbble", icon: "fa-brands fa-dribbble" },
+      { domain: "youtube.com", name: "Youtube", icon: "fa-brands fa-youtube" },
+      { domain: "youtu.be", name: "Youtube", icon: "fa-brands fa-youtube" },
+      { domain: "facebook.com", name: "Facebook", icon: "fa-brands fa-facebook-f" },
+      { domain: "twitch.tv", name: "Twitch", icon: "fa-brands fa-twitch" },
+      { domain: "reddit.com", name: "Reddit", icon: "fa-brands fa-reddit-alien" },
+      { domain: "medium.com", name: "Medium", icon: "fa-brands fa-medium" },
+      { domain: "stackoverflow.com", name: "StackOverflow", icon: "fa-brands fa-stack-overflow" },
+      { domain: "gitlab.com", name: "Gitlab", icon: "fa-brands fa-gitlab" },
+      { domain: "behance.net", name: "Behance", icon: "fa-brands fa-behance" },
+      { domain: "producthunt.com", name: "ProductHunt", icon: "fa-brands fa-product-hunt" },
+      { domain: "discord.gg", name: "Discord", icon: "fa-brands fa-discord" },
+      { domain: "discord.com", name: "Discord", icon: "fa-brands fa-discord" },
+      { domain: "spotify.com", name: "Spotify", icon: "fa-brands fa-spotify" },
+      { domain: "slack.com", name: "Slack", icon: "fa-brands fa-slack" },
+      { domain: "pinterest.com", name: "Pinterest", icon: "fa-brands fa-pinterest" },
+      { domain: "tiktok.com", name: "TikTok", icon: "fa-brands fa-tiktok" }
+    ];
+
+    const getIconForUrl = (url, defaultName = "") => {
+      if (!url) return "fa-solid fa-link";
+      const cleanUrl = url.toLowerCase();
+      const match = BRAND_MAPPING.find(b => cleanUrl.includes(b.domain));
+      if (match) return match.icon;
+      if (defaultName) {
+        const nameMatch = BRAND_MAPPING.find(b => b.name.toLowerCase() === defaultName.toLowerCase());
+        if (nameMatch) return nameMatch.icon;
+      }
+      return "fa-solid fa-link";
+    };
+
+    const escapeHtml = (text) => {
+      if (!text) return "";
+      return text
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    };
+
+    try {
+      const urlParams = new URLSearchParams(window.location.search);
+      const profileDataB64 = urlParams.get('p');
+      if (profileDataB64) {
+        const decodedJson = decodeURIComponent(escape(atob(profileDataB64)));
+        const data = JSON.parse(decodedJson);
+        const container = document.getElementById("links-container");
+
+        Object.keys(data).forEach(field => {
+          const url = data[field];
+          if (url && url.trim() !== "") {
+            const iconClass = getIconForUrl(url, field);
+            const linkHtml = `
+              <a href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer" class="link-btn">
+                <i class="brand-icon ${iconClass}"></i>
+                <span>${escapeHtml(field)}</span>
+                <i class="arrow-icon fa-solid fa-chevron-right"></i>
+              </a>
+            `;
+            container.innerHTML += linkHtml;
+          }
+        });
+      } else {
+        document.getElementById("links-container").innerHTML = "<p class='error-msg'>No profile links provided.</p>";
+      }
+    } catch (e) {
+      console.error(e);
+      document.getElementById("links-container").innerHTML = "<p class='error-msg'>Failed to load profiles. Check if your URL is correct.</p>";
+    }
+  </script>
+</body>
+</html>

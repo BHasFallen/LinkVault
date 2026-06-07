@@ -1,0 +1,28 @@
+// "name" - represents the name of the extension
+// "version" - can be modified everytime you add features in the extension
+// "manifest_version" - specifies the assets within your extension that are to be made accessible by webpages
+// "browser-action" - what page to or things to be loaded when clicke don the extension
+// "icons" - this is preferred to be in 128px x 128px.
+// "permissions" - permisiions can be added manually after reading the chrome documentation
+
+{
+  "name": "Instant Profile Access",
+  "version": "0.0.1",
+  "manifest_version": 3,
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": "logo.png"
+  },
+  "icons": {
+    "128": "logo.png"
+  },
+  "permissions": [
+    "storage",
+    "activeTab",
+    "scripting",
+    "contextMenus"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  }
+}
