@@ -367,25 +367,6 @@
 	</div>
 </div>
 
-<script>
-	const openBtn = document.getElementById("open-install-modal");
-	const closeBtn = document.getElementById("close-modal");
-	const modal = document.getElementById("install-modal");
-
-	openBtn.addEventListener("click", () => {
-		modal.classList.add("active");
-	});
-
-	closeBtn.addEventListener("click", () => {
-		modal.classList.remove("active");
-	});
-
-	// Close when clicking outside content
-	modal.addEventListener("click", (e) => {
-		if (e.target === modal) {
-			modal.classList.remove("active");
-		}
-	});
-</script>
+<script src="./landing.js"></script>
 </body>
 </html>
