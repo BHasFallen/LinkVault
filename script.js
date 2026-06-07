@@ -9,12 +9,6 @@ const cancelAddBtn = document.getElementById("cancel-add-btn");
 const autofillBtn = document.getElementById("autofill_btn");
 const quickShareBtn = document.getElementById("quick_share_btn");
 
-// Settings Panel Elements
-const toggleSettingsBtn = document.getElementById("toggle_settings_btn");
-const settingsPanel = document.getElementById("settings-panel");
-const settingUsernameInput = document.getElementById("setting-username");
-const settingRepoInput = document.getElementById("setting-repo");
-
 // Check environment to prevent errors in non-extension (standalone web page) view
 const isExtension = typeof chrome !== "undefined" && chrome.storage && chrome.storage.local;
 
@@ -39,9 +33,6 @@ const storageGet = (keys, callback) => {
       customFields.forEach(field => {
         items[field] = localStorage.getItem(field) || "";
       });
-      // Fallback for settings keys
-      items.gitHubUsername = localStorage.getItem("gitHubUsername") || "";
-      items.gitHubRepo = localStorage.getItem("gitHubRepo") || "LinkVault";
       
       callback(items);
     } else if (typeof keys === "string") {
@@ -196,10 +187,6 @@ const loadAllFromStorage = async () => {
       storageSet({ customFields });
     }
 
-    // Set settings values
-    settingUsernameInput.value = items.gitHubUsername || "";
-    settingRepoInput.value = items.gitHubRepo || "LinkVault";
-
     // Clear UI and render
     linksDiv.innerHTML = "";
     customFields.forEach((field) => {
@@ -350,27 +337,6 @@ cancelAddBtn.addEventListener("click", () => {
   add_new_button.style.display = "flex";
 });
 
-// Settings Panel toggle and inputs save
-toggleSettingsBtn.addEventListener("click", () => {
-  if (settingsPanel.style.display === "none") {
-    settingsPanel.style.display = "block";
-    toggleSettingsBtn.style.color = "var(--accent)";
-    toggleSettingsBtn.style.borderColor = "var(--border-focus)";
-  } else {
-    settingsPanel.style.display = "none";
-    toggleSettingsBtn.style.color = "var(--text-secondary)";
-    toggleSettingsBtn.style.borderColor = "var(--border-color)";
-  }
-});
-
-settingUsernameInput.addEventListener("input", (e) => {
-  storageSet({ gitHubUsername: e.target.value.trim() });
-});
-
-settingRepoInput.addEventListener("input", (e) => {
-  storageSet({ gitHubRepo: e.target.value.trim() || "LinkVault" });
-});
-
 // --------------------- FEATURE 1: AUTOFILL JOB APPLICATIONS ---------------------
 autofillBtn.addEventListener("click", async () => {
   if (!isExtension) {
@@ -461,24 +427,12 @@ quickShareBtn.addEventListener("click", () => {
       return;
     }
 
-    const username = items.gitHubUsername || "";
-    const repo = items.gitHubRepo || "LinkVault";
-
-    if (!username) {
-      showToast("Set GitHub Username in settings first!");
-      settingsPanel.style.display = "block";
-      toggleSettingsBtn.style.color = "var(--accent)";
-      toggleSettingsBtn.style.borderColor = "var(--border-focus)";
-      settingUsernameInput.focus();
-      return;
-    }
-
     try {
       const jsonStr = JSON.stringify(shareData);
       const b64 = btoa(unescape(encodeURIComponent(jsonStr)));
       
       // Compile short, clean, trusted URL using the GitHub Pages deployment URL
-      const finalUrl = `https://${username}.github.io/${repo}/share.html?p=${b64}`;
+      const finalUrl = `https://bhasfallen.github.io/LinkVault/share.html?p=${b64}`;
 
       navigator.clipboard.writeText(finalUrl).then(() => {
         showToast("Quick-Share Link copied!");
